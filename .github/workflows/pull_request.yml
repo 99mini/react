@@ -1,0 +1,36 @@
+name: Pull Request Checks
+
+# 이 Workflow는 main 브랜치에 대한 Pull Request에서 실행됩니다.
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run ESLint
+        run: yarn lint
+
+      - name: Run Prettier
+        run: yarn prettier
+
+      - name: Run Jest with coverage
+        run: yarn test --coverage --watchAll=false
+
+      - name: Run TypeScript
+        run: yarn tsc --noEmit
